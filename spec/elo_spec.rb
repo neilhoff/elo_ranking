@@ -1,6 +1,48 @@
 require 'minitest/autorun'
 require_relative '../elo.rb'
 
+describe "Round Robin Tournament" do
+	describe "When there is a round robin tournament of 3 players" do
+		it "must show that each player played each other one time" do
+			bob = Player.new "Bob"
+			joe = Player.new "Joe", 200	
+			ryan = Player.new "Ryan"
+			t = Tournament.new(5,[bob,joe, ryan])
+			t.round_robin
+			t.games.must_equal 3
+		end
+	end
+	
+	describe "If there are 2 games left" do
+		it "must return 2 games left" do
+			bob = Player.new "Bob"
+			joe = Player.new "Joe", 200	
+			ryan = Player.new "Ryan"
+			t = Tournament.new(5,[bob,joe, ryan])
+			t.round_robin
+			t.play_game(winner=bob, loser=joe)
+			t.games_left.must_equal 2
+		end
+	end
+	
+	describe "If Bob beats Joe and Ryan in a 3 team round robin" do
+		it "Bob must be the tournament winner" do
+			bob = Player.new "Bob"
+			joe = Player.new "Joe", 200	
+			ryan = Player.new "Ryan"
+			t = Tournament.new(5,[bob,joe, ryan])
+			t.round_robin
+			t.play_game(winner=bob, loser=joe)
+			t.play_game(winner=bob, loser=ryan)
+			t.play_game(winner=joe, loser=ryan)
+			
+			puts t.game[3][:loser].name
+			
+			t.tournament_winner.must_equal bob
+		end
+	end
+end
+
 describe "Player beats another player 3 times" do
 	describe "When Bob beats Joe and each has a rating of 100 and k factor of 30" do
 		it "must return 141 for Bob and 59 for Joe" do
