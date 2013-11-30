@@ -45,27 +45,41 @@ class Game
 end
 
 class Tournament
-	attr_reader :games, :players
+	attr_reader :games, :players, :games_left, :tournament_winner, :game
 	
 	def initialize(games, players=[]) 
 		@games = games
 		@players = players
+		@games_left = @games
+		@tournament_winner = ""
+		@game = {}
+		@tournament_type = ""
 		
 	end
 	
 	def add_player(player)
 		@players << players
+		#TODO: add 1 to @games when round_robin is tournament type
 	end
 	
-end
-
-
-
-bob = Player.new "Bob"
-joe = Player.new "Joe", 200	
-
-t = Tournament.new(5,[bob,joe])
-t.players.each do |x|
-	puts x.name
-	puts x.score
+	def round_robin
+		@games = @players.size
+		@games_left = @games
+		@game = {}
+	end
+	
+	def play_game(winner, loser)
+		@games_left -= 1
+		game_num = @games - @games_left
+		
+		game = Game.new(winner, loser)
+		winner.beats(loser, game)
+		
+		@game[game_num] = { :winner => winner, :loser => loser}
+		
+		if @games_left == 0
+		
+		end
+	end
+	
 end
